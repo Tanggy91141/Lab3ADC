@@ -45,9 +45,13 @@ ADC_HandleTypeDef hadc1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
-GPIO_PinState SwitchB1[2];
-  uint16_t sw=0;
-  uint32_t ButtonTimeStamp = 0;
+GPIO_PinState SW_B1[2];
+uint32_t ButtonTimeStamp = 0;
+
+//PB Variables
+uint8_t ADCMode = 0;
+uint16_t ADCOutputConverted = 0;
+
 typedef struct
 {
 	ADC_ChannelConfTypeDef Config;
@@ -106,12 +110,6 @@ int main(void)
   /* USER CODE BEGIN 2 */
   ADCPollingMethodInit();
 
-  //PB Variables
-  //uint8_t ADCMode = 0;
-  //float ADCOutputConverted = 0.0;
-
-
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -121,14 +119,39 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  sw = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
-	  if(HAL_GetTick() - ButtonTimeStamp >= 100)
+
+	  //B1 press
+	  if (HAL_GetTick() - ButtonTimeStamp >= 100)
 	     {
 	  		ButtonTimeStamp = HAL_GetTick();
 
-	  		SwitchB1[1] = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+	  		SW_B1[1] = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+	  		if ((SW_B1[1] == GPIO_PIN_RESET) && (SW_B1[0] == GPIO_PIN_SET))
+	  		{
+	  			if (ADCMode == 0)
+	  			{
+	  				ADCMode = 1;
+	  			}
+	  			else
+	  			{
+	  				ADCMode = 0;
+	  			}
+	  		}
+	  		SW_B1[0] = SW_B1[1];
 	     }
 	  ADCPollingMethodUpdate();
+
+	 //ADCMode
+	 if (ADCMode == 0)
+	 {
+		 //ADCOutputConverted = volt value from PA0 in mV
+		 ADCOutputConverted = ((3.30/((2^12)/1.00))*(ADCChannel[0].data))/1000.00;
+	 }
+	 else
+	 {
+		 //ADCOutputConverted = temp value from temp-sensor in Celsius Degrees
+		 ADCOutputConverted = ((ADCChannel[1].data - 0.76)/0.0025) + 25.00;
+	 }
   }
   /* USER CODE END 3 */
 }
