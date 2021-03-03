@@ -45,6 +45,9 @@ ADC_HandleTypeDef hadc1;
 UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
+GPIO_PinState SwitchB1[2];
+  uint16_t sw=0;
+  uint32_t ButtonTimeStamp = 0;
 typedef struct
 {
 	ADC_ChannelConfTypeDef Config;
@@ -107,8 +110,7 @@ int main(void)
   //uint8_t ADCMode = 0;
   //float ADCOutputConverted = 0.0;
 
-  GPIO_PinState SwitchB1[2];
-  uint32_t ButtonTimeStamp = 0;
+
 
   /* USER CODE END 2 */
 
@@ -119,6 +121,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  sw = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
 	  if(HAL_GetTick() - ButtonTimeStamp >= 100)
 	     {
 	  		ButtonTimeStamp = HAL_GetTick();
