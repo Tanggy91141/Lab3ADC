@@ -145,12 +145,12 @@ int main(void)
 	 if (ADCMode == 0)
 	 {
 		 //ADCOutputConverted = volt value from PA0 in mV
-		 ADCOutputConverted = ((3.30/((2^12)/1.00))*(ADCChannel[0].data))/1000.00;
+		 ADCOutputConverted = (3300*ADCChannel[0].data)/4096;
 	 }
 	 else
 	 {
 		 //ADCOutputConverted = temp value from temp-sensor in Celsius Degrees
-		 ADCOutputConverted = ((ADCChannel[1].data - 0.76)/0.0025) + 25.00;
+		 ADCOutputConverted = (((((3300*ADCChannel[1].data)/4096) - 760)*2)/5) + 25;
 	 }
   }
   /* USER CODE END 3 */
