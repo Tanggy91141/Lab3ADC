@@ -49,7 +49,7 @@ GPIO_PinState SW_B1[2];
 uint32_t ButtonTimeStamp = 0;		//Time stamp
 
 uint8_t ADCMode = 0;				//Mode
-uint32_t ADCOutputConverted = 0;	//data
+float ADCOutputConverted = 0;	//data
 
 typedef struct
 {
@@ -145,12 +145,12 @@ int main(void)
 	 if (ADCMode == 0)
 	 {
 		 //ADCOutputConverted = volt value from PA0 in mV
-		 ADCOutputConverted = (3300*ADCChannel[0].data)/4096;
+		 ADCOutputConverted = (3300.0*ADCChannel[0].data)/4096.0;
 	 }
 	 else
 	 {
 		 //ADCOutputConverted = temp value from temp-sensor in Celsius Degrees
-		 ADCOutputConverted = (((((3300*ADCChannel[1].data)/4096) - 760)*2)/5) + 25;
+		 ADCOutputConverted = ((((3300.0*ADCChannel[1].data)/4096.0) - 760.0)/2.5) + 25.0;
 	 }
   }
   /* USER CODE END 3 */
