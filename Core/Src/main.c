@@ -46,16 +46,15 @@ UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 GPIO_PinState SW_B1[2];
-uint32_t ButtonTimeStamp = 0;
+uint32_t ButtonTimeStamp = 0;		//Time stamp
 
-//PB Variables
-uint8_t ADCMode = 0;
-uint16_t ADCOutputConverted = 0;
+uint8_t ADCMode = 0;				//Mode
+uint32_t ADCOutputConverted = 0;	//data
 
 typedef struct
 {
 	ADC_ChannelConfTypeDef Config;
-	uint16_t data;
+	uint32_t data;
 } ADCStructure;
 
 ADCStructure ADCChannel[2] = {0};
@@ -125,9 +124,10 @@ int main(void)
 	     {
 	  		ButtonTimeStamp = HAL_GetTick();
 
-	  		SW_B1[1] = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);
+	  		SW_B1[1] = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_13);	//Read state of B1 (PC13)
 	  		if ((SW_B1[1] == GPIO_PIN_RESET) && (SW_B1[0] == GPIO_PIN_SET))
 	  		{
+	  			//swap mode 0 and 1
 	  			if (ADCMode == 0)
 	  			{
 	  				ADCMode = 1;
